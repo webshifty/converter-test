@@ -1,5 +1,7 @@
 {
     "require": {
-        "twbs/bootstrap": "5.0.2"
+        "twbs/bootstrap": "5.0.2",
+        "twig/twig": "^3.0",
+        "curl/curl": "^2.3"
     }
 }

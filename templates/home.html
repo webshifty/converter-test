@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block head %}
+{{ parent() }}
+<style type="text/css">
+    .important { color: #336699; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12">
+            <h2>Конвертер валют</h2>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <select class="form-select" id="inputGroupSelect01">
+                {% for item in exchangeRates %}
+                <option value="{{ item.cc }}"><b>{{ item.cc }}</b> <small>{{ item.txt }}</small></option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6">
+            <select class="form-select" id="inputGroupSelect011">
+                {% for key, value in exchangeRates %}
+                <option value="{{ value }}"><b>{{ key }}</b> <small>{{ value }}</small></option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <input type="text" class="form-control" id="exampleInputPassword1" value=" item.rate ">
+        </div>
+        <div class="col-6">
+            <input type="text" class="form-control" id="exampleInputPassword1" value=" item.rate " disabled>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12">
+            <h2>История</h2>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12">
+            <h2>Настройки</h2>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
