@@ -6,8 +6,8 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "ln -sr /vendor/twbs/bootstrap/dist/css/ css",
-            "ln -sr /vendor/twbs/bootstrap/dist/js/ js"
+            "ln -sr /vendor/twbs/bootstrap/dist/css/bootstrap.min.css",
+            "ln -sr /vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"
         ]
     }
 }
