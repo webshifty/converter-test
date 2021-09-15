@@ -1,8 +1,10 @@
 {
     "require": {
+        "ext-json": "*",
         "twbs/bootstrap": "5.0.2",
         "twig/twig": "^3.0",
-        "curl/curl": "^2.3"
+        "curl/curl": "^2.3",
+        "illuminate/database": "^8.61"
     },
     "scripts": {
         "post-install-cmd": [
