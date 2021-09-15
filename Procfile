@@ -1,3 +1,2 @@
 web: vendor/bin/heroku-php-nginx
-ln -s ../vendor/twbs/bootstrap/dist/css/
-ln -s ../vendor/twbs/bootstrap/dist/js/
+cp ../vendor/twbs/bootstrap/dist/css/ css/ && cp ../vendor/twbs/bootstrap/dist/js/ js/
