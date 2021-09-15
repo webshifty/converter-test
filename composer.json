@@ -3,5 +3,11 @@
         "twbs/bootstrap": "5.0.2",
         "twig/twig": "^3.0",
         "curl/curl": "^2.3"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "ln -sr /vendor/twbs/bootstrap/dist/css/ css",
+            "ln -sr /vendor/twbs/bootstrap/dist/js/ js"
+        ]
     }
 }
