@@ -1,59 +1,189 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Конвертер валют{% endblock %}
 {% block head %}
 {{ parent() }}
-<style type="text/css">
-    .important { color: #336699; }
-</style>
 {% endblock %}
 {% block content %}
-<div class="container">
-    <div class="row py-2">
-        <div class="col-12">
-            <h2>Конвертер валют</h2>
+<div class="currencyBackground">
+    <div class="container">
+        <div class="row pt-5 pb-2">
+            <div class="col-12">
+                <h2>Конвертер валют</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <form>
+            <div class="row py-1">
+                <div class="col-6">
+                    <select class="form-select text-uppercase" id="inputCurrencyAbbr">
+                        {% for item in currencies %}
+                        <option value="{{ item.abbr }}">{{ item.abbr }} - {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6">
+                    <select class="form-select text-uppercase" id="inputCurrencyAbbrReverse">
+                        {% for item in currenciesReverse %}
+                        <option value="{{ item.abbr }}">{{ item.abbr }} - {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-6">
+                    <input type="number" class="form-control" id="inputValue" name="inputValue" placeholder="1">
+                </div>
+                <div class="col-6">
+                    <input type="number" class="form-control" id="resultValue" name="resultValue" disabled>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="rainbow">
+    <div class="container">
+        <div class="row pt-3 pb-2">
+            <div class="col-12">
+                <h2>История</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                {% if history is empty %}
+                <div class="alert alert-warning" role="alert">
+                    История еще пустая
+                </div>
+                {% else %}
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Валюта 1</th>
+                        <th scope="col">Валюта 2</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Результат</th>
+                        <th scope="col">Дата</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td class="text-uppercase">{{ item.input_currency }}</td>
+                        <td class="text-uppercase">{{ item.input_currency_reverse }}</td>
+                        <td>{{ item.value }}</td>
+                        <td>{{ item.result }}</td>
+                        <td>{{ item.date }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <select class="form-select" id="inputGroupSelect01">
-                {% for item in exchangeRates %}
-                <option value="{{ item.cc }}"><b>{{ item.cc }}</b> <small>{{ item.txt }}</small></option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-6">
-            <select class="form-select" id="inputGroupSelect011">
-                {% for key, value in exchangeRates %}
-                <option value="{{ value }}"><b>{{ key }}</b> <small>{{ value }}</small></option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <input type="text" class="form-control" id="exampleInputPassword1" value=" item.rate ">
-        </div>
-        <div class="col-6">
-            <input type="text" class="form-control" id="exampleInputPassword1" value=" item.rate " disabled>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row py-2">
-        <div class="col-12">
-            <h2>История</h2>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row py-2">
+    <div class="row pt-4 pb-2">
         <div class="col-12">
             <h2>Настройки</h2>
         </div>
     </div>
 </div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h6>Отобразить количество последних запросов в истории</h6>
+            <input class="btn btn-primary currencyButton" value="1" type="button" onclick="historyResize('1')">
+            <input class="btn btn-primary currencyButton" value="5" type="button" onclick="historyResize('5')">
+            <input class="btn btn-primary currencyButton" value="10" type="button" onclick="historyResize('10')">
+            <input class="btn btn-primary currencyButton" value="15" type="button" onclick="historyResize('15')">
+            <input class="btn btn-primary currencyButton" value="20" type="button" onclick="historyResize('20')">
+            <input class="btn btn-primary currencyButton" value="50" type="button" onclick="historyResize('50')">
+            <hr>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h6>Скрыть/Отобразить валюты</h6>
+            {% for item in allCurrencies %}
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="currencySwitch_{{ item.id }}" {% if item.enable == true %} checked {% endif %}>
+                <label class="form-check-label" for="currencySwitch_{{ item.id }}">{{ item.abbr }} - {{ item.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
+<script>
+    document.getElementsByName("inputValue")[0].addEventListener('input', function (e) {
+
+        if (isNaN(e.data)) {
+            alert("Must input numbers");
+        } else {
+            let inputCurrencyAbbr = document.getElementById("inputCurrencyAbbr").value;
+            let inputCurrencyAbbrReverse = document.getElementById("inputCurrencyAbbrReverse").value;
+            fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/' + inputCurrencyAbbr + '/' + inputCurrencyAbbrReverse + '.json')
+                .then(response => response.json())
+                .then(data => {
+                    let result = (this.value * data[inputCurrencyAbbrReverse]).toFixed(4)
+                    document.getElementById("resultValue").value = result;
+                    let sendData = {
+                        "input_currency": inputCurrencyAbbr,
+                        "input_currency_reverse": inputCurrencyAbbrReverse,
+                        "value": this.value,
+                        "result": result
+                    };
+
+                    $.ajax({
+                        type: 'post',
+                        url: 'history.php',
+                        data: sendData,
+                        success: function () {
+
+                        }
+                    });
+                });
+        }
+    });
+
+    $('input:checkbox').change(function() {
+        let sendData = {
+            "id": this.id.slice(15),
+            "enable": $(this).prop('checked') ? 1 : 0
+        };
+
+        $.ajax({
+            type: 'post',
+            url: 'currency.php',
+            data: sendData,
+            success: function () {
+                location.replace(location.href.split('#')[0]);
+            }
+        });
+    });
+
+    function historyResize(size) {
+        let sendData = {
+            "id": 1,
+            "history_size": size
+        };
+
+        $.ajax({
+            type: 'post',
+            url: 'users.php',
+            data: sendData,
+            success: function () {
+                location.replace(location.href.split('#')[0]);
+            }
+        });
+    }
+</script>
 {% endblock %}
